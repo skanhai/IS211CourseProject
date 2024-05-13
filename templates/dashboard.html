@@ -1,0 +1,57 @@
+<!-- templates/dashboard.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <form method="post" action="/search">
+            <label for="search_type">Search by:</label>
+            <select id="search_type" name="search_type">
+                <option value="isbn">ISBN</option>
+                <option value="title">Title</option>
+            </select>
+            <input type="text" id="search_query" name="search_query" placeholder="Enter search query">
+            <button type="submit">Search</button>
+        </form>
+        <h2>Hello, {{ username }}</h2> <!-- Display the username here -->
+        <p><a href="/logout">Logout</a></p>
+        <h1>My Books</h1>
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+        <ul>
+            {% if books %}
+                {% for book in books %}
+                    <li>
+                        <h2>{{ book[1] }}</h2>
+                        <p>Author: {{ book[2] }}</p>
+                        {% if book[3] %}
+                            <p>Page Count: {{ book[3] }}</p>
+                        {% endif %}
+                        {% if book[4] %}
+                            <p>Average Rating: {{ book[4] }}</p>
+                        {% endif %}
+                        {% if book[5] %}
+                            <img src="{{ book[5] }}" alt="Book Cover">
+                        {% else %}
+                            <p>No Thumbnail Available</p>
+                        {% endif %}
+                        <form method="post" action="/delete_book/{{ book[0] }}" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                            <input type="submit" value="Delete">
+                        </form>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+        <div class="pagination">
+            <!-- Pagination links here -->
+        </div>
+    </div>
+</body>
+</html>
